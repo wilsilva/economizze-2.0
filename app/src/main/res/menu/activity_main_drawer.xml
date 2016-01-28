@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/receitas"
+            android:icon="@drawable/ic_chart_line_grey600_36dp"
+            android:title="@string/receitas" />
+        <item
+            android:id="@+id/despesas"
+            android:icon="@drawable/ic_chart_pie_grey600_36dp"
+            android:title="@string/despesas" />
+        <item
+            android:id="@+id/financas_mes"
+            android:icon="@drawable/ic_chart_bar_grey600_36dp"
+            android:title="@string/financas_mes" />
+
+    </group>
+
+    <item android:title="@string/office">
+        <menu>
+            <item
+                android:id="@+id/menu_relatorios"
+                android:icon="@drawable/ic_database_grey600_36dp"
+                android:title="@string/relatorios" />
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="Send" />-->
+        </menu>
+    </item>
+
+</menu>
