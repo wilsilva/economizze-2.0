@@ -1,4 +1,4 @@
-package br.com.williamsilva.economizze;
+package br.com.williamsilva.economizze.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,14 +18,24 @@ import android.view.MenuItem;
 
 import java.util.Date;
 
+import br.com.williamsilva.economizze.R;
 import br.com.williamsilva.economizze.fragment.DespesasFragment;
 import br.com.williamsilva.economizze.fragment.FinancasFragment;
+import br.com.williamsilva.economizze.fragment.PrincipalFragment;
 import br.com.williamsilva.economizze.fragment.ReceitasFragment;
 import br.com.williamsilva.economizze.model.Despesa;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @Bind(R.id.drawer_layout)
+    protected DrawerLayout drawer;
+
+    @Bind(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,36 +44,29 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ButterKnife.bind(this);
+
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        ReceitasFragment receitasFragment = new ReceitasFragment();
-        transaction.add(R.id.content_main, receitasFragment);
+        PrincipalFragment principalFragment = new PrincipalFragment();
+        transaction.add(R.id.content_main, principalFragment);
         transaction.commit();
+        setTitle(R.string.principal);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
     }
 
@@ -101,17 +105,20 @@ public class MainActivity extends AppCompatActivity
         Class fragmentClass;
 
         switch (id) {
+            case R.id.principal:
+                fragmentClass = PrincipalFragment.class;
+                break;
             case R.id.receitas:
                 fragmentClass = ReceitasFragment.class;
                 break;
             case R.id.despesas:
-                fragmentClass =  DespesasFragment.class;
+                fragmentClass = DespesasFragment.class;
                 break;
             case R.id.financas_mes:
                 fragmentClass = FinancasFragment.class;
                 break;
             default:
-                fragmentClass = ReceitasFragment.class;
+                fragmentClass = PrincipalFragment.class;
                 break;
         }
 
@@ -124,8 +131,8 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawers();
+        setTitle(item.getTitle());
         return true;
     }
 }

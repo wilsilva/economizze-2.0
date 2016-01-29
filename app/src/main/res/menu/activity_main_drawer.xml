@@ -3,8 +3,12 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/principal"
+            android:icon="@drawable/ic_star_grey600_36dp"
+            android:title="@string/principal" />
+        <item
             android:id="@+id/receitas"
-            android:icon="@drawable/ic_chart_line_grey600_36dp"
+            android:icon="@drawable/ic_currency_usd_grey600_36dp"
             android:title="@string/receitas" />
         <item
             android:id="@+id/despesas"

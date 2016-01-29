@@ -7,5 +7,7 @@
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
+    <color name="background_apllication">#E0E0E0</color>
+    <color name="red_500">#F44336</color>
 
 </resources>
