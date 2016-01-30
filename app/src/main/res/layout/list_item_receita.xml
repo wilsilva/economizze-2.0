@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_marginBottom="16dp"
+    android:layout_gravity="center_horizontal"
+    card_view:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ln_receita"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@+id/visao_geral"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:id="@+id/sigla_receita"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@drawable/rounded_icon_receita"
+                android:gravity="center"
+                android:text="SA"
+                android:textColor="@color/icons" />
+
+            <TextView
+                android:id="@+id/nome_receita"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_horizontal"
+                android:text="Salário"
+                android:textColor="@color/primary_text"
+                android:textSize="17dp" />
+
+            <TextView
+                android:id="@+id/valor_receita"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_horizontal"
+                android:text="R$ 20000,00"
+                android:textColor="@color/primary_text"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ln_receita"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/title_vencimento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recebimento"
+                android:textColor="@color/secondary_text"/>
+            <TextView
+                android:id="@+id/recebimento_receita"
+                android:layout_below="@+id/title_vencimento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30/12/2016"
+                android:textColor="@color/secondary_text"/>
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

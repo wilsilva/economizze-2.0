@@ -4,66 +4,60 @@ import android.content.Context;
 
 import java.util.List;
 
-import br.com.williamsilva.economizze.model.Despesa;
+import br.com.williamsilva.economizze.model.Receita;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import io.realm.exceptions.RealmException;
 
 /**
- * Created by william on 28/01/16.
+ * Created by william on 30/01/16.
  */
-public class DespesaDAO {
-
-    private Despesa despesa;
+public class ReceitaDAO {
+    private Receita receita;
     private Context context;
 
-    public DespesaDAO(Context context, Despesa despesa) {
-        this.despesa = despesa;
+    public ReceitaDAO(Context context, Receita receita) {
+        this.receita = receita;
         this.context = context;
-
     }
 
-    public DespesaDAO(Context context) {
+    public ReceitaDAO(Context context) {
         this.context = context;
     }
 
     private int autoIncrementForId() {
-
         Realm realm = Realm.getInstance(this.context);
         int id = 0;
-
         try {
 
-            RealmResults<Despesa> results = realm.where(Despesa.class).findAll();
+            RealmResults<Receita> results = realm.where(Receita.class).findAll();
 
             if (results.size() == 0) {
                 return 1;
             }
 
             results.sort("id", Sort.DESCENDING);
-            Despesa despesa = results.get(0);
-            id = despesa.getId() + 1;
+            Receita receita = results.get(0);
+            id = receita.getId() + 1;
 
         } catch (RealmException erro) {
             erro.printStackTrace();
         } finally {
             realm.close();
         }
-
         return id;
     }
 
     public void insertOrUpdate() {
         Realm realm = Realm.getInstance(this.context);
-
         try {
-            if (this.despesa.getId() == null || this.despesa.getId().equals(0)) {
-                this.despesa.setId(this.autoIncrementForId());
+            if (this.receita.getId().equals(null) || this.receita.getId().equals(0)) {
+                this.receita.setId(this.autoIncrementForId());
             }
 
             realm.beginTransaction();
-            realm.copyToRealmOrUpdate(this.despesa);
+            realm.copyToRealmOrUpdate(this.receita);
             realm.commitTransaction();
         } catch (RealmException erro) {
             erro.printStackTrace();
@@ -76,7 +70,7 @@ public class DespesaDAO {
         Realm realm = Realm.getInstance(this.context);
         try {
             realm.beginTransaction();
-            despesa.removeFromRealm();
+            receita.removeFromRealm();
             realm.commitTransaction();
         } catch (RealmException erro) {
             erro.printStackTrace();
@@ -85,33 +79,31 @@ public class DespesaDAO {
         }
     }
 
-    public List<Despesa> listDespesas() {
+    public List<Receita> listReceitas() {
 
         Realm realm = Realm.getInstance(context);
-        RealmResults<Despesa> despesas = null;
-
+        RealmResults<Receita> receitas = null;
         try {
-            despesas = realm.where(Despesa.class).findAll();
-            despesas.sort("nome");
+            receitas = realm.where(Receita.class).findAll();
+            receitas.sort("nome");
         } catch (Exception erro) {
             erro.printStackTrace();
         }
 
-        return despesas;
+        return receitas;
     }
 
-    public Despesa findDespesaById(int id) {
-
+    public Receita findReceitaById(int id) {
         Realm realm = Realm.getInstance(context);
-        Despesa despesa = null;
+        Receita receita = null;
 
         try {
-            RealmResults<Despesa> despesas = realm.where(Despesa.class).findAll();
-            despesa = despesas.where().equalTo("id", id).findFirst();
+            RealmResults<Receita> despesas = realm.where(Receita.class).findAll();
+            receita = despesas.where().equalTo("id", id).findFirst();
         } catch (Exception erro) {
             erro.printStackTrace();
         }
 
-        return despesa;
+        return receita;
     }
 }
