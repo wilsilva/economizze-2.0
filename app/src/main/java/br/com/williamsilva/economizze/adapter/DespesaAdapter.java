@@ -1,7 +1,10 @@
 package br.com.williamsilva.economizze.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.sax.StartElementListener;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import br.com.williamsilva.economizze.R;
+import br.com.williamsilva.economizze.activity.FormDespesaActivity;
 import br.com.williamsilva.economizze.model.Despesa;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,7 +58,7 @@ public class DespesaAdapter extends RecyclerView.Adapter<DespesaAdapter.DespesaV
         return despesas.size();
     }
 
-    public class DespesaViewHolder extends RecyclerView.ViewHolder {
+    public class DespesaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.sigla_despesa)
         public TextView siglaDespesa;
@@ -68,6 +72,14 @@ public class DespesaAdapter extends RecyclerView.Adapter<DespesaAdapter.DespesaV
         public DespesaViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(this.itemView.getContext(), FormDespesaActivity.class);
+            intent.putExtra("id_despesa",despesas.get(getPosition()).getId());
+            inflater.getContext().startActivity(intent);
         }
     }
 }

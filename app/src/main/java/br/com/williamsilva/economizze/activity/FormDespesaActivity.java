@@ -1,5 +1,6 @@
 package br.com.williamsilva.economizze.activity;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,8 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -34,9 +37,12 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
     protected RadioGroup groupStatus;
     @Bind(R.id.data_vencimento)
     protected TextView vencimento;
+    @Bind(R.id.despesa_a_pagar)
+    protected RadioButton despesaNaoPaga;
+    @Bind(R.id.despesa_paga)
+    protected RadioButton despesaPaga;
 
     private Calendar calendar;
-    private Despesa despesa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +54,21 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
         this.setTitle("Adicionar Despesa");
         ButterKnife.bind(this);
 
-        despesa = new Despesa();
         calendar = Calendar.getInstance();
         setTextVencimento();
+
+
+        if(getIntent().getIntExtra("id_despesa",0) > 0)
+        {
+            Despesa despesa = null;
+            despesa = new DespesaDAO(this).findDespesaById(getIntent().getExtras().getInt("id_despesa"));
+            nomeDespesa.setText(despesa.getNome());
+            valorDespesa.setText(despesa.getValor().toString());
+            vencimento.setText(new SimpleDateFormat("dd/MM/yyyy").format(despesa.getVencimento()));
+            despesaFixa.setChecked((despesa.getDespesaFixa() > 0) ? true : false);
+            despesaNaoPaga.setChecked((despesa.getStatus() == 0) ? true : false);
+            despesaPaga.setChecked((despesa.getStatus() == 1) ? true : false);
+        }
     }
 
     @Override
@@ -79,11 +97,13 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
         try {
 
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-            this.despesa.setNome(nomeDespesa.getText().toString());
-            this.despesa.setValor(Double.parseDouble(valorDespesa.getText().toString()));
-            this.despesa.setVencimento(format.parse(vencimento.getText().toString()));
-            this.despesa.setDespesaFixa((despesaFixa.isChecked()) ? 1 : 0);
-            this.despesa.setStatus((groupStatus.getCheckedRadioButtonId() == R.id.despesa_paga) ? 1 : 0);
+            Despesa despesa = new Despesa();
+            despesa.setId(getIntent().getIntExtra("id_despesa",0));
+            despesa.setNome(nomeDespesa.getText().toString());
+            despesa.setValor(Double.parseDouble(valorDespesa.getText().toString()));
+            despesa.setVencimento(format.parse(vencimento.getText().toString()));
+            despesa.setDespesaFixa((despesaFixa.isChecked()) ? 1 : 0);
+            despesa.setStatus((groupStatus.getCheckedRadioButtonId() == R.id.despesa_paga) ? 1 : 0);
 
             DespesaDAO dao = new DespesaDAO(this,despesa);
             dao.insertOrUpdate();
