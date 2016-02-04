@@ -14,4 +14,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="principal">Principal</string>
+    <string name="adicionar_despesa">Adicionar Despesa</string>
+    <string name="alterar_despesa">Alterar Despesa</string>
+    <string name="adicionar_receita">Adicionar Receita</string>
+    <string name="alterar_receita">Alterar Receita</string>
+    <string name="visao_geral">Visão Geral</string>
 </resources>

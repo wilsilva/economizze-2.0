@@ -1,6 +1,7 @@
 package br.com.williamsilva.economizze.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import br.com.williamsilva.economizze.R;
+import br.com.williamsilva.economizze.activity.FormReceitaActivity;
 import br.com.williamsilva.economizze.model.Receita;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,7 +51,7 @@ public class ReceitaAdapter extends RecyclerView.Adapter<ReceitaAdapter.ReceitaV
         return receitas.size();
     }
 
-    public class ReceitaViewHolder extends RecyclerView.ViewHolder {
+    public class ReceitaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.nome_receita)
         public TextView nomeReceita;
@@ -63,6 +65,14 @@ public class ReceitaAdapter extends RecyclerView.Adapter<ReceitaAdapter.ReceitaV
         public ReceitaViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(itemView.getContext(), FormReceitaActivity.class);
+            intent.putExtra("id_receita",receitas.get(getPosition()).getId());
+            itemView.getContext().startActivity(intent);
         }
     }
 }

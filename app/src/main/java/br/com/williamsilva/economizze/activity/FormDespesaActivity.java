@@ -43,6 +43,7 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
     protected RadioButton despesaPaga;
 
     private Calendar calendar;
+    private SimpleDateFormat format;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +52,21 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
-        this.setTitle("Adicionar Despesa");
+        this.setTitle(R.string.adicionar_despesa);
         ButterKnife.bind(this);
-
+        format = new SimpleDateFormat("dd/MM/yyyy");
         calendar = Calendar.getInstance();
         setTextVencimento();
 
 
         if(getIntent().getIntExtra("id_despesa",0) > 0)
         {
+            setTitle(R.string.alterar_despesa);
             Despesa despesa = null;
             despesa = new DespesaDAO(this).findDespesaById(getIntent().getExtras().getInt("id_despesa"));
             nomeDespesa.setText(despesa.getNome());
             valorDespesa.setText(despesa.getValor().toString());
-            vencimento.setText(new SimpleDateFormat("dd/MM/yyyy").format(despesa.getVencimento()));
+            vencimento.setText(format.format(despesa.getVencimento()));
             despesaFixa.setChecked((despesa.getDespesaFixa() > 0) ? true : false);
             despesaNaoPaga.setChecked((despesa.getStatus() == 0) ? true : false);
             despesaPaga.setChecked((despesa.getStatus() == 1) ? true : false);
@@ -96,7 +98,6 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
     private void salvarDespesa() {
         try {
 
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             Despesa despesa = new Despesa();
             despesa.setId(getIntent().getIntExtra("id_despesa",0));
             despesa.setNome(nomeDespesa.getText().toString());
@@ -122,7 +123,6 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
     }
 
     private void setTextVencimento() {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         vencimento.setText(format.format(calendar.getTime()));
     }
 

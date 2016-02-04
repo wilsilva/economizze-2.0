@@ -51,6 +51,7 @@
                     android:textSize="17dp"
                     android:text="Receitas"/>
                 <TextView
+                    android:id="@+id/valor_receita"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -83,6 +84,7 @@
                     android:textSize="17dp"
                     android:text="Despesas"/>
                 <TextView
+                    android:id="@+id/valor_despesa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

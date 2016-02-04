@@ -79,7 +79,7 @@ public class DespesaAdapter extends RecyclerView.Adapter<DespesaAdapter.DespesaV
         public void onClick(View v) {
             Intent intent = new Intent(this.itemView.getContext(), FormDespesaActivity.class);
             intent.putExtra("id_despesa",despesas.get(getPosition()).getId());
-            inflater.getContext().startActivity(intent);
+            itemView.getContext().startActivity(intent);
         }
     }
 }
