@@ -52,7 +52,7 @@ public class FormReceitaActivity extends AppCompatActivity  implements DatePicke
             Receita receita =  new ReceitaDAO(this).findReceitaById(getIntent().getExtras().getInt("id_receita"));
             recebimento.setText(format.format(receita.getDataRecebimento()));
             nome.setText(receita.getNome());
-            valor.setText(receita.getValor().toString().replace(".",","));
+            valor.setText(receita.getValor().toString());
             receitaFixa.setChecked((receita.getReceitaFixa() > 0) ? true : false);
         }
     }
