@@ -64,12 +64,49 @@ public class DespesaController {
         return despesasDoMes;
     }
 
+    public List<Despesa> listarDespesas(Calendar calendar){
+
+        DespesaDAO dao = new DespesaDAO(context);
+        List<Despesa> despesas = dao.listDespesas();
+        List<Despesa> despesasDoMes = new ArrayList<>();
+
+        /**
+         * Formata a data para comparar o mês e o ano atual
+         * Formato: Mês/Ano ex: 01/2016
+         */
+        SimpleDateFormat fmt = new SimpleDateFormat("MM/yyyy");
+
+        for (Despesa despesa : despesas) {
+
+            if (fmt.format(despesa.getVencimento()).equals(fmt.format(calendar.getTime())))
+                despesasDoMes.add(despesa);
+        }
+
+        return despesasDoMes;
+    }
+
     public Double valorTotalDespesa() {
         List<Despesa> despesas = this.listarDespesas();
         Double totalDespesas = 0d;
         for (Despesa despesa : despesas) {
             totalDespesas += despesa.getValor();
         }
+        return totalDespesas;
+    }
+
+    public Double valorTotalDespesa(Calendar calendar){
+
+        List<Despesa> despesas = this.listarDespesas();
+        Double totalDespesas = 0d;
+        SimpleDateFormat fmt = new SimpleDateFormat("MM/yyyy");
+
+        for (Despesa despesa : despesas) {
+
+            if(fmt.format(despesa.getVencimento()).equals(fmt.format(calendar.getTime()))) {
+                totalDespesas += despesa.getValor();
+            }
+        }
+
         return totalDespesas;
     }
 }
