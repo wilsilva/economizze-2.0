@@ -1,13 +1,66 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.com.williamsilva.economizze.fragment.FinancasFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="TEste2" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/ln_mes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:drawableLeft="@drawable/chevron_left" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fevereiro de 2016"
+                android:textColor="@color/primary_text"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:drawableRight="@drawable/chevron_right" />
+        </LinearLayout>
+        <View
+            android:id="@+id/view_total_receitas"
+            android:layout_below="@id/ln_mes"
+            android:layout_alignParentLeft="true"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_icon_receita"
+            />
+        <TextView
+            android:layout_below="@id/ln_mes"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"
+            android:layout_marginTop="16dp"
+            android:textSize="15dp"
+            android:textColor="@color/primary_text"
+            android:text="Total de Receitas"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ln_mes"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="16dp"
+            android:textSize="15dp"
+            android:textColor="@color/primary_text"
+            android:text="10000,00"/>
+    </RelativeLayout>
+</ScrollView>
