@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -18,6 +19,7 @@ public class Despesa extends RealmObject{
     private Date vencimento;
     private int status;
     private int despesaFixa;
+
 
     public Despesa(Integer id, String nome, Double valor, Date vencimento, int status, int despesaFixa) {
         this.id = id;
@@ -77,4 +79,5 @@ public class Despesa extends RealmObject{
     public void setDespesaFixa(int despesaFixa) {
         this.despesaFixa = despesaFixa;
     }
+
 }

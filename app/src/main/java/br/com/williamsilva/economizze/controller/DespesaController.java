@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
 import io.realm.RealmResults;
@@ -44,69 +45,60 @@ public class DespesaController {
         this.despesa = despesa;
     }
 
-    public List<Despesa> listarDespesas() {
-        DespesaDAO dao = new DespesaDAO(context);
-        List<Despesa> despesas = dao.listDespesas();
-        List<Despesa> despesasDoMes = new ArrayList<>();
-
-        /**
-         * Formata a data para comparar o mês e o ano atual
-         * Formato: Mês/Ano ex: 01/2016
-         */
-        SimpleDateFormat fmt = new SimpleDateFormat("MM/yyyy");
-
-        for (Despesa despesa : despesas) {
-
-            if (fmt.format(despesa.getVencimento()).equals(fmt.format(Calendar.getInstance().getTime())))
-                despesasDoMes.add(despesa);
-        }
-
-        return despesasDoMes;
-    }
-
     public List<Despesa> listarDespesas(Calendar calendar){
 
         DespesaDAO dao = new DespesaDAO(context);
         List<Despesa> despesas = dao.listDespesas();
         List<Despesa> despesasDoMes = new ArrayList<>();
 
-        /**
-         * Formata a data para comparar o mês e o ano atual
-         * Formato: Mês/Ano ex: 01/2016
-         */
-        SimpleDateFormat fmt = new SimpleDateFormat("MM/yyyy");
-
         for (Despesa despesa : despesas) {
 
-            if (fmt.format(despesa.getVencimento()).equals(fmt.format(calendar.getTime())))
+            if (new RelogioHelper(despesa.getVencimento()).equals(calendar.getTime()))
                 despesasDoMes.add(despesa);
         }
 
         return despesasDoMes;
     }
 
-    public Double valorTotalDespesa() {
-        List<Despesa> despesas = this.listarDespesas();
+
+    public Double totalDespesas(Calendar calendar){
+
+        List<Despesa> despesas = this.listarDespesas(calendar);
         Double totalDespesas = 0d;
+
         for (Despesa despesa : despesas) {
-            totalDespesas += despesa.getValor();
+                totalDespesas += despesa.getValor();
         }
+
         return totalDespesas;
     }
 
-    public Double valorTotalDespesa(Calendar calendar){
+    public Double totalDespesasPagas(Calendar calendar){
 
-        List<Despesa> despesas = this.listarDespesas();
-        Double totalDespesas = 0d;
-        SimpleDateFormat fmt = new SimpleDateFormat("MM/yyyy");
+        List<Despesa> despesas = this.listarDespesas(calendar);
+        Double totalDespesasPagas = 0d;
 
-        for (Despesa despesa : despesas) {
-
-            if(fmt.format(despesa.getVencimento()).equals(fmt.format(calendar.getTime()))) {
-                totalDespesas += despesa.getValor();
+        for(Despesa despesa : despesas){
+            if(despesa.getStatus() == 1){
+                totalDespesasPagas += despesa.getValor();
             }
         }
 
-        return totalDespesas;
+        return totalDespesasPagas;
     }
+
+    public Double totalDespesasNaoPagas(Calendar calendar){
+
+        List<Despesa> despesas = this.listarDespesas(calendar);
+        Double totalDespesasPagas = 0d;
+
+        for(Despesa despesa : despesas){
+            if(despesa.getStatus() == 0){
+                totalDespesasPagas += despesa.getValor();
+            }
+        }
+
+        return totalDespesasPagas;
+    }
+
 }

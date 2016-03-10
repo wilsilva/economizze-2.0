@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import br.com.williamsilva.economizze.R;
 import br.com.williamsilva.economizze.activity.FormReceitaActivity;
+import br.com.williamsilva.economizze.controller.helper.MoneyHelper;
+import br.com.williamsilva.economizze.controller.helper.NameFinanceHelper;
+import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
 import br.com.williamsilva.economizze.model.Receita;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,10 +42,9 @@ public class ReceitaAdapter extends RecyclerView.Adapter<ReceitaAdapter.ReceitaV
     public void onBindViewHolder(ReceitaViewHolder holder, int position) {
         Receita receita = receitas.get(position);
         holder.nomeReceita.setText(receita.getNome());
-        holder.siglaReceita.setText(receita.getNome().substring(0, 2).toUpperCase());
-        holder.valorReceita.setText("R$ " + receita.getValor().toString().replace(".", ","));
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        holder.recebimentoReceita.setText(format.format(receita.getDataRecebimento()));
+        holder.siglaReceita.setText(NameFinanceHelper.getInstance().gerarIniciais(receita.getNome()));
+        holder.valorReceita.setText(MoneyHelper.getInstance().convert(receita.getValor()));
+        holder.recebimentoReceita.setText(new RelogioHelper(receita.getDataRecebimento()).dataPtBr());
     }
 
     @Override

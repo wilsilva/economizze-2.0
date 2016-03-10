@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.williamsilva.economizze.R;
@@ -60,7 +61,7 @@ public class DespesasFragment extends Fragment {
         super.onResume();
 
         DespesaController controller = new DespesaController(getContext());
-        List<Despesa> despesas = controller.listarDespesas();
+        List<Despesa> despesas = controller.listarDespesas(Calendar.getInstance());
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

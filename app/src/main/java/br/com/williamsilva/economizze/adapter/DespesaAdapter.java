@@ -2,24 +2,22 @@ package br.com.williamsilva.economizze.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.sax.StartElementListener;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import br.com.williamsilva.economizze.R;
 import br.com.williamsilva.economizze.activity.FormDespesaActivity;
+import br.com.williamsilva.economizze.controller.helper.MoneyHelper;
+import br.com.williamsilva.economizze.controller.helper.NameFinanceHelper;
+import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
 import br.com.williamsilva.economizze.model.Despesa;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.RealmList;
 
 /**
  * Created by william on 30/01/16.
@@ -46,10 +44,9 @@ public class DespesaAdapter extends RecyclerView.Adapter<DespesaAdapter.DespesaV
 
         Despesa despesa = despesas.get(position);
         holder.nomeDespesa.setText(despesa.getNome());
-        holder.valorDespesa.setText("R$ " + despesa.getValor().toString().replace(".", ","));
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        holder.vencimentoDespesa.setText(format.format(despesa.getVencimento()));
-        holder.siglaDespesa.setText(despesa.getNome().substring(0, 2).toUpperCase());
+        holder.valorDespesa.setText(MoneyHelper.getInstance().convert(despesa.getValor()));
+        holder.vencimentoDespesa.setText(new RelogioHelper(despesa.getVencimento()).dataPtBr());
+        holder.siglaDespesa.setText(NameFinanceHelper.getInstance().gerarIniciais(despesa.getNome()));
 
     }
 

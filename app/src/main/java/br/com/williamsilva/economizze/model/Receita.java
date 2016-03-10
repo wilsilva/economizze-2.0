@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -17,6 +18,7 @@ public class Receita extends RealmObject {
     private Date dataRecebimento;
     private Double valor;
     private int receitaFixa;
+
 
     public Receita(Integer id, String nome, Date dataRecebimento, Double valor, int receitaFixa) {
         this.id = id;
@@ -69,4 +71,5 @@ public class Receita extends RealmObject {
     public void setReceitaFixa(int receitaFixa) {
         this.receitaFixa = receitaFixa;
     }
+
 }

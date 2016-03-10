@@ -9,5 +9,6 @@
     <color name="divider">#B6B6B6</color>
     <color name="background_apllication">#E0E0E0</color>
     <color name="red_500">#F44336</color>
+    <color name="blue_color">#2196F3</color>
 
 </resources>

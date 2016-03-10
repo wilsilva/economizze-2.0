@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import br.com.williamsilva.economizze.R;
+import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
 import butterknife.Bind;
@@ -43,7 +44,6 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
     protected RadioButton despesaPaga;
 
     private Calendar calendar;
-    private SimpleDateFormat format;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,6 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
         getSupportActionBar().setHomeButtonEnabled(false);
         this.setTitle(R.string.adicionar_despesa);
         ButterKnife.bind(this);
-        format = new SimpleDateFormat("dd/MM/yyyy");
         calendar = Calendar.getInstance();
         setTextVencimento();
 
@@ -66,7 +65,7 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
             despesa = new DespesaDAO(this).findDespesaById(getIntent().getExtras().getInt("id_despesa"));
             nomeDespesa.setText(despesa.getNome());
             valorDespesa.setText(despesa.getValor().toString());
-            vencimento.setText(format.format(despesa.getVencimento()));
+            vencimento.setText(new RelogioHelper(despesa.getVencimento()).dataPtBr());
             despesaFixa.setChecked((despesa.getDespesaFixa() > 0) ? true : false);
             despesaNaoPaga.setChecked((despesa.getStatus() == 0) ? true : false);
             despesaPaga.setChecked((despesa.getStatus() == 1) ? true : false);
@@ -102,7 +101,7 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
             despesa.setId(getIntent().getIntExtra("id_despesa",0));
             despesa.setNome(nomeDespesa.getText().toString());
             despesa.setValor(Double.parseDouble(valorDespesa.getText().toString()));
-            despesa.setVencimento(format.parse(vencimento.getText().toString()));
+            despesa.setVencimento(RelogioHelper.parse(vencimento.getText().toString()));
             despesa.setDespesaFixa((despesaFixa.isChecked()) ? 1 : 0);
             despesa.setStatus((groupStatus.getCheckedRadioButtonId() == R.id.despesa_paga) ? 1 : 0);
 
@@ -123,7 +122,7 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
     }
 
     private void setTextVencimento() {
-        vencimento.setText(format.format(calendar.getTime()));
+        vencimento.setText(new RelogioHelper(calendar.getTime()).dataPtBr());
     }
 
     @OnClick(R.id.data_vencimento)

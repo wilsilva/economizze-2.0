@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
 import br.com.williamsilva.economizze.model.Receita;
 import br.com.williamsilva.economizze.model.dao.ReceitaDAO;
 
@@ -27,35 +28,39 @@ public class ReceitaController {
         this.receita = receita;
     }
 
-    public List<Receita> listarReceitas() {
+    public List<Receita> listarReceitas(Calendar calendar) {
 
         ReceitaDAO dao = new ReceitaDAO(context);
         List<Receita> receitas = dao.listReceitas();
         List<Receita> receitasDoMes = new ArrayList<>();
 
-        /**
-         * Formata a data para comparar o mês e o ano atual
-         * Formato: Mês/Ano ex: 01/2016
-         */
-        SimpleDateFormat fmt = new SimpleDateFormat("MM/yyyy");
-
         for (Receita receita : receitas) {
 
-            if (fmt.format(receita.getDataRecebimento()).equals(fmt.format(Calendar.getInstance().getTime())))
+            if (new RelogioHelper(receita.getDataRecebimento()).equals(calendar.getTime()))
                 receitasDoMes.add(receita);
         }
 
         return receitasDoMes;
     }
 
-    public Double valorTotalReceita() {
+    public Double totalReceitas(Calendar calendar) {
+
         Double totalReceita = 0d;
-        List<Receita> receitas = this.listarReceitas();
+
+        List<Receita> receitas = this.listarReceitas(calendar);
 
         for (Receita receita : receitas) {
             totalReceita += receita.getValor();
         }
 
         return totalReceita;
+    }
+
+    public Double saldoAltual(Calendar calendar) {
+
+        DespesaController despesaController = new DespesaController(this.context);
+        Double totalDespesaPaga = despesaController.totalDespesasPagas(calendar);
+        Double totalReceita = this.totalReceitas(calendar);
+        return totalReceita - totalDespesaPaga;
     }
 }
