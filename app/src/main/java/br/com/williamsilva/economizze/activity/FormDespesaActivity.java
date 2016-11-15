@@ -20,6 +20,7 @@ import java.util.Calendar;
 
 import br.com.williamsilva.economizze.R;
 import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
+import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
 import butterknife.Bind;
@@ -58,8 +59,7 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
         setTextVencimento();
 
 
-        if(getIntent().getIntExtra("id_despesa",0) > 0)
-        {
+        if (getIntent().getIntExtra("id_despesa", 0) > 0) {
             setTitle(R.string.alterar_despesa);
             Despesa despesa = null;
             despesa = new DespesaDAO(this).findDespesaById(getIntent().getExtras().getInt("id_despesa"));
@@ -98,16 +98,18 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
         try {
 
             Despesa despesa = new Despesa();
-            despesa.setId(getIntent().getIntExtra("id_despesa",0));
+            despesa.setId(getIntent().getIntExtra("id_despesa", 0));
             despesa.setNome(nomeDespesa.getText().toString());
             despesa.setValor(Double.parseDouble(valorDespesa.getText().toString()));
             despesa.setVencimento(RelogioHelper.parse(vencimento.getText().toString()));
             despesa.setDespesaFixa((despesaFixa.isChecked()) ? 1 : 0);
             despesa.setStatus((groupStatus.getCheckedRadioButtonId() == R.id.despesa_paga) ? 1 : 0);
 
-            DespesaDAO dao = new DespesaDAO(this,despesa);
+            DespesaDAO dao = new DespesaDAO(this, despesa);
             dao.insertOrUpdate();
             finish();
+        } catch (NomeExistenteException e) {
+            Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
