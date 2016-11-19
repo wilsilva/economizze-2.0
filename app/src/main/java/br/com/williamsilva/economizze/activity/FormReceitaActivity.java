@@ -21,7 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FormReceitaActivity extends AppCompatActivity  implements DatePickerDialog.OnDateSetListener {
+public class FormReceitaActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private Calendar calendar;
     private SimpleDateFormat format;
@@ -47,9 +47,9 @@ public class FormReceitaActivity extends AppCompatActivity  implements DatePicke
         calendar = Calendar.getInstance();
         setTextRecebimento();
 
-        if(getIntent().getIntExtra("id_receita",0) > 0){
+        if (getIntent().getIntExtra("id_receita", 0) > 0) {
             setTitle(R.string.alterar_receita);
-            Receita receita =  new ReceitaDAO(this).findReceitaById(getIntent().getExtras().getInt("id_receita"));
+            Receita receita = new ReceitaDAO(this).findReceitaById(getIntent().getExtras().getInt("id_receita"));
             recebimento.setText(format.format(receita.getDataRecebimento()));
             nome.setText(receita.getNome());
             valor.setText(receita.getValor().toString());
@@ -82,18 +82,18 @@ public class FormReceitaActivity extends AppCompatActivity  implements DatePicke
 
     private void salvarReceita() {
 
-        try{
+        try {
             Receita receita = new Receita();
-            receita.setId(getIntent().getIntExtra("id_receita",0));
+            receita.setId(getIntent().getIntExtra("id_receita", 0));
             receita.setNome(nome.getText().toString());
-            receita.setValor(Double.parseDouble(valor.getText().toString()));
+            receita.setValor(Double.parseDouble(valor.getText().toString().replace(",", ".")));
             receita.setDataRecebimento(format.parse(recebimento.getText().toString()));
             receita.setReceitaFixa((receitaFixa.isChecked()) ? 1 : 0);
 
-            ReceitaDAO dao = new ReceitaDAO(this,receita);
+            ReceitaDAO dao = new ReceitaDAO(this, receita);
             dao.insertOrUpdate();
 
-        }catch (Exception erro){
+        } catch (Exception erro) {
             erro.printStackTrace();
         }
 

@@ -45,7 +45,7 @@ public class DespesaController {
         this.despesa = despesa;
     }
 
-    public List<Despesa> listarDespesas(Calendar calendar){
+    public List<Despesa> listarDespesas(Calendar calendar) {
 
         DespesaDAO dao = new DespesaDAO(context);
         List<Despesa> despesas = dao.listDespesas();
@@ -61,25 +61,25 @@ public class DespesaController {
     }
 
 
-    public Double totalDespesas(Calendar calendar){
+    public Double totalDespesas(Calendar calendar) {
 
         List<Despesa> despesas = this.listarDespesas(calendar);
         Double totalDespesas = 0d;
 
         for (Despesa despesa : despesas) {
-                totalDespesas += despesa.getValor();
+            totalDespesas += despesa.getValor();
         }
 
         return totalDespesas;
     }
 
-    public Double totalDespesasPagas(Calendar calendar){
+    public Double totalDespesasPagas(Calendar calendar) {
 
         List<Despesa> despesas = this.listarDespesas(calendar);
         Double totalDespesasPagas = 0d;
 
-        for(Despesa despesa : despesas){
-            if(despesa.getStatus() == 1){
+        for (Despesa despesa : despesas) {
+            if (despesa.getStatus() == 1) {
                 totalDespesasPagas += despesa.getValor();
             }
         }
@@ -87,13 +87,13 @@ public class DespesaController {
         return totalDespesasPagas;
     }
 
-    public Double totalDespesasNaoPagas(Calendar calendar){
+    public Double totalDespesasNaoPagas(Calendar calendar) {
 
         List<Despesa> despesas = this.listarDespesas(calendar);
         Double totalDespesasPagas = 0d;
 
-        for(Despesa despesa : despesas){
-            if(despesa.getStatus() == 0){
+        for (Despesa despesa : despesas) {
+            if (despesa.getStatus() == 0) {
                 totalDespesasPagas += despesa.getValor();
             }
         }
@@ -101,4 +101,9 @@ public class DespesaController {
         return totalDespesasPagas;
     }
 
+    public void salvar(Despesa despesa) {
+
+        DespesaDAO dao = new DespesaDAO(this.context, despesa);
+        dao.insertOrUpdate();
+    }
 }

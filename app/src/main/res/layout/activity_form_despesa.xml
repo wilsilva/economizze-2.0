@@ -32,6 +32,7 @@
             android:id="@+id/valor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:digits="0123456789,"
             android:hint="Valor"
             android:inputType="numberDecimal"
             android:textColor="@color/primary_text" />
@@ -70,14 +71,14 @@
             android:id="@+id/despesa_a_pagar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Despesa à Pagar"
-            android:checked="true"/>
+            android:checked="true"
+            android:text="Despesa à Pagar" />
 
         <RadioButton
             android:id="@+id/despesa_paga"
-            android:layout_marginLeft="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:text="Despesa Paga" />
 
     </RadioGroup>

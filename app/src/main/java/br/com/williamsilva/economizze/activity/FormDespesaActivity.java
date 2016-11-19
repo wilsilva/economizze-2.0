@@ -6,21 +6,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import br.com.williamsilva.economizze.R;
-import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
+import br.com.williamsilva.economizze.controller.DespesaController;
 import br.com.williamsilva.economizze.exception.NomeExistenteException;
+import br.com.williamsilva.economizze.factory.DespesaFactory;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
 import butterknife.Bind;
@@ -29,46 +24,33 @@ import butterknife.OnClick;
 
 public class FormDespesaActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    @Bind(R.id.nome)
-    protected EditText nomeDespesa;
+    private Calendar calendar;
+    private DespesaFactory despesaFactory;
+
     @Bind(R.id.valor)
     protected EditText valorDespesa;
-    @Bind(R.id.cbx_despesa_fixa)
-    protected CheckBox despesaFixa;
-    @Bind(R.id.group_status)
-    protected RadioGroup groupStatus;
-    @Bind(R.id.data_vencimento)
-    protected TextView vencimento;
-    @Bind(R.id.despesa_a_pagar)
-    protected RadioButton despesaNaoPaga;
-    @Bind(R.id.despesa_paga)
-    protected RadioButton despesaPaga;
-
-    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_form_despesa);
+        this.setContentView(R.layout.activity_form_despesa);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeButtonEnabled(false);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(false);
-        this.setTitle(R.string.adicionar_despesa);
+        this.calendar = Calendar.getInstance();
+        this.despesaFactory = new DespesaFactory(this);
         ButterKnife.bind(this);
-        calendar = Calendar.getInstance();
-        setTextVencimento();
 
+        this.setTitle(R.string.adicionar_despesa);
+        this.setTextVencimento();
 
         if (getIntent().getIntExtra("id_despesa", 0) > 0) {
             setTitle(R.string.alterar_despesa);
-            Despesa despesa = null;
-            despesa = new DespesaDAO(this).findDespesaById(getIntent().getExtras().getInt("id_despesa"));
-            nomeDespesa.setText(despesa.getNome());
-            valorDespesa.setText(despesa.getValor().toString());
-            vencimento.setText(new RelogioHelper(despesa.getVencimento()).dataPtBr());
-            despesaFixa.setChecked((despesa.getDespesaFixa() > 0) ? true : false);
-            despesaNaoPaga.setChecked((despesa.getStatus() == 0) ? true : false);
-            despesaPaga.setChecked((despesa.getStatus() == 1) ? true : false);
+            Despesa despesa = new DespesaDAO(this)
+                    .findDespesaById(getIntent()
+                            .getExtras()
+                            .getInt("id_despesa"));
+            this.despesaFactory.bindDespesaActivity(despesa);
         }
     }
 
@@ -80,9 +62,9 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        int itemId = item.getItemId();
 
-        switch (id) {
+        switch (itemId) {
             case android.R.id.home:
                 finish();
                 break;
@@ -96,18 +78,9 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
 
     private void salvarDespesa() {
         try {
-
-            Despesa despesa = new Despesa();
-            despesa.setId(getIntent().getIntExtra("id_despesa", 0));
-            despesa.setNome(nomeDespesa.getText().toString());
-            despesa.setValor(Double.parseDouble(valorDespesa.getText().toString()));
-            despesa.setVencimento(RelogioHelper.parse(vencimento.getText().toString()));
-            despesa.setDespesaFixa((despesaFixa.isChecked()) ? 1 : 0);
-            despesa.setStatus((groupStatus.getCheckedRadioButtonId() == R.id.despesa_paga) ? 1 : 0);
-
-            DespesaDAO dao = new DespesaDAO(this, despesa);
-            dao.insertOrUpdate();
-            finish();
+            DespesaController controller = new DespesaController(this);
+            controller.salvar(this.despesaFactory.getDespesa());
+            this.finish();
         } catch (NomeExistenteException e) {
             Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).show();
         } catch (Exception e) {
@@ -117,23 +90,23 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        calendar.set(Calendar.MONTH, monthOfYear);
-        calendar.set(Calendar.YEAR, year);
-        setTextVencimento();
+        this.calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        this.calendar.set(Calendar.MONTH, monthOfYear);
+        this.calendar.set(Calendar.YEAR, year);
+        this.setTextVencimento();
     }
 
     private void setTextVencimento() {
-        vencimento.setText(new RelogioHelper(calendar.getTime()).dataPtBr());
+        despesaFactory.bindVencimentoDespesaAcitvity(this.calendar.getTime());
     }
 
     @OnClick(R.id.data_vencimento)
     public void alterarData(View view) {
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 FormDespesaActivity.this,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH));
+                this.calendar.get(Calendar.YEAR),
+                this.calendar.get(Calendar.MONTH),
+                this.calendar.get(Calendar.DAY_OF_MONTH));
         dpd.show(getFragmentManager(), "Datepickerdialog");
     }
 }

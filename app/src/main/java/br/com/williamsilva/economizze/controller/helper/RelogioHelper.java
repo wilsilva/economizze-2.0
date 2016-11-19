@@ -12,17 +12,19 @@ import java.util.Locale;
  */
 public class RelogioHelper {
 
+    private final Locale locale;
     private Date date;
     private SimpleDateFormat dateFormat;
 
 
     public RelogioHelper(Date date) {
         this.date = date;
+        locale = new Locale("pt", "BR");
         dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     }
 
     public String MesPorExtenso() {
-        dateFormat = new SimpleDateFormat("MMMM", new Locale("pt", "BR"));
+        dateFormat = new SimpleDateFormat("MMMM", locale);
         String mes = dateFormat.format(date);
         return mes.substring(0, 1).toUpperCase() + mes.substring(1);
 
@@ -35,7 +37,6 @@ public class RelogioHelper {
     public static Date parse(String date) {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
         try {
             return dateFormat.parse(date);
         } catch (ParseException e) {
@@ -61,5 +62,9 @@ public class RelogioHelper {
         }
 
         return false;
+    }
+
+    public Locale getLocale() {
+        return this.locale;
     }
 }
