@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
 import br.com.williamsilva.economizze.model.Receita;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -66,14 +67,15 @@ public class ReceitaDAO {
         }
     }
 
-    public void delete() {
+    public void delete() throws ErroPersistenciaException {
         Realm realm = Realm.getInstance(this.context);
         try {
+            receita = this.findReceitaById(receita.getId());
             realm.beginTransaction();
             receita.removeFromRealm();
             realm.commitTransaction();
         } catch (RealmException erro) {
-            erro.printStackTrace();
+            throw new ErroPersistenciaException(erro.getMessage());
         } finally {
             realm.close();
         }

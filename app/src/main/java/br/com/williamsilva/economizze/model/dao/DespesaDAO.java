@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
 import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.model.Despesa;
 import io.realm.Realm;
@@ -97,11 +98,12 @@ public class DespesaDAO {
     public void delete() {
         Realm realm = Realm.getInstance(this.context);
         try {
+            despesa = this.findDespesaById(despesa.getId());
             realm.beginTransaction();
             despesa.removeFromRealm();
             realm.commitTransaction();
         } catch (RealmException erro) {
-            erro.printStackTrace();
+            throw new ErroPersistenciaException(erro.getMessage(), erro.getCause());
         } finally {
             realm.close();
         }

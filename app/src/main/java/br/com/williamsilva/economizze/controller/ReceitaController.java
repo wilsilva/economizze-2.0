@@ -2,12 +2,12 @@ package br.com.williamsilva.economizze.controller;
 
 import android.content.Context;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
+import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
 import br.com.williamsilva.economizze.model.Receita;
 import br.com.williamsilva.economizze.model.dao.ReceitaDAO;
 
@@ -36,7 +36,7 @@ public class ReceitaController {
 
         for (Receita receita : receitas) {
 
-            if (new RelogioHelper(receita.getDataRecebimento()).equals(calendar.getTime()))
+            if (new RelogioHelper(receita.getDataRecebimento()).possuiMesmoMesAno(calendar.getTime()))
                 receitasDoMes.add(receita);
         }
 
@@ -62,5 +62,15 @@ public class ReceitaController {
         Double totalDespesaPaga = despesaController.totalDespesasPagas(calendar);
         Double totalReceita = this.totalReceitas(calendar);
         return totalReceita - totalDespesaPaga;
+    }
+
+    public void remover() throws ErroPersistenciaException {
+        ReceitaDAO receitaDAO = new ReceitaDAO(this.context, this.receita);
+        receitaDAO.delete();
+    }
+
+    public void salvar() {
+        ReceitaDAO dao = new ReceitaDAO(this.context, this.receita);
+        dao.insertOrUpdate();
     }
 }

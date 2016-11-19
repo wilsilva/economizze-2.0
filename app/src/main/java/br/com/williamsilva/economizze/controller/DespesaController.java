@@ -2,15 +2,14 @@ package br.com.williamsilva.economizze.controller;
 
 import android.content.Context;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
+import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
-import io.realm.RealmResults;
 
 /**
  * Created by william on 30/01/16.
@@ -53,7 +52,7 @@ public class DespesaController {
 
         for (Despesa despesa : despesas) {
 
-            if (new RelogioHelper(despesa.getVencimento()).equals(calendar.getTime()))
+            if (new RelogioHelper(despesa.getVencimento()).possuiMesmoMesAno(calendar.getTime()))
                 despesasDoMes.add(despesa);
         }
 
@@ -105,5 +104,10 @@ public class DespesaController {
 
         DespesaDAO dao = new DespesaDAO(this.context, despesa);
         dao.insertOrUpdate();
+    }
+
+    public void remover() throws ErroPersistenciaException{
+        DespesaDAO despesaDAO = new DespesaDAO(this.context,this.despesa);
+        despesaDAO.delete();
     }
 }
