@@ -14,7 +14,9 @@ import java.util.Calendar;
 
 import br.com.williamsilva.economizze.R;
 import br.com.williamsilva.economizze.controller.ReceitaController;
+import br.com.williamsilva.economizze.exception.CampoNuloException;
 import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
+import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.factory.ReceitaFactory;
 import br.com.williamsilva.economizze.model.dao.ReceitaDAO;
 import butterknife.ButterKnife;
@@ -96,8 +98,12 @@ public class FormReceitaActivity extends AppCompatActivity implements DatePicker
     private void salvarReceita() {
 
         try {
-            ReceitaController receitaController = new ReceitaController(this,receitaFactory.getReceita());
+            ReceitaController receitaController = new ReceitaController(this, receitaFactory.getReceita());
             receitaController.salvar();
+        } catch (NomeExistenteException erro) {
+            Snackbar.make(findViewById(android.R.id.content), erro.getMessage(), Snackbar.LENGTH_LONG).show();
+        } catch (CampoNuloException erro) {
+            Snackbar.make(findViewById(android.R.id.content), erro.getMessage(), Snackbar.LENGTH_LONG).show();
         } catch (Exception erro) {
             erro.printStackTrace();
         }

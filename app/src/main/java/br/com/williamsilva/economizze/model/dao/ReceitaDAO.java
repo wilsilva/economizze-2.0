@@ -5,8 +5,10 @@ import android.content.Context;
 import java.util.List;
 
 import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
+import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.model.Receita;
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import io.realm.exceptions.RealmException;
@@ -50,16 +52,33 @@ public class ReceitaDAO {
         return id;
     }
 
-    public void insertOrUpdate() {
+    private boolean nomeJaFoiCadastrado(Integer id) {
+        Realm realm = Realm.getInstance(this.context);
+        RealmResults<Receita> receitas = realm.where(Receita.class).findAll();
+        RealmQuery<Receita> query = receitas.where().equalTo("nome", this.receita.getNome());
+
+        if (query.count() > 0)
+            if (!query.findFirst().getId().equals(id))
+                return true;
+
+        return false;
+    }
+
+
+    public void insertOrUpdate() throws NomeExistenteException {
         Realm realm = Realm.getInstance(this.context);
         try {
-            if (this.receita.getId().equals(null) || this.receita.getId().equals(0)) {
-                this.receita.setId(this.autoIncrementForId());
-            }
+            if (this.nomeJaFoiCadastrado(this.receita.getId())) {
+                if (this.receita.getId().equals(null) || this.receita.getId().equals(0)) {
+                    this.receita.setId(this.autoIncrementForId());
+                }
 
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(this.receita);
-            realm.commitTransaction();
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(this.receita);
+                realm.commitTransaction();
+            } else {
+                throw new NomeExistenteException("Já existe este nome cadastrado!");
+            }
         } catch (RealmException erro) {
             erro.printStackTrace();
         } finally {
@@ -100,8 +119,8 @@ public class ReceitaDAO {
         Receita receita = null;
 
         try {
-            RealmResults<Receita> despesas = realm.where(Receita.class).findAll();
-            receita = despesas.where().equalTo("id", id).findFirst();
+            RealmResults<Receita> receitas = realm.where(Receita.class).findAll();
+            receita = receitas.where().equalTo("id", id).findFirst();
         } catch (Exception erro) {
             erro.printStackTrace();
         }

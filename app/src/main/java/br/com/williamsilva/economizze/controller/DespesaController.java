@@ -8,6 +8,7 @@ import java.util.List;
 
 import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
 import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
+import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
 
@@ -100,14 +101,14 @@ public class DespesaController {
         return totalDespesasPagas;
     }
 
-    public void salvar(Despesa despesa) {
+    public void salvar(Despesa despesa) throws NomeExistenteException {
 
         DespesaDAO dao = new DespesaDAO(this.context, despesa);
         dao.insertOrUpdate();
     }
 
-    public void remover() throws ErroPersistenciaException{
-        DespesaDAO despesaDAO = new DespesaDAO(this.context,this.despesa);
+    public void remover() throws ErroPersistenciaException {
+        DespesaDAO despesaDAO = new DespesaDAO(this.context, this.despesa);
         despesaDAO.delete();
     }
 }

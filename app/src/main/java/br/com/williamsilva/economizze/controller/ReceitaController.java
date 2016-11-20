@@ -8,6 +8,8 @@ import java.util.List;
 
 import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
 import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
+import br.com.williamsilva.economizze.exception.CampoNuloException;
+import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.model.Receita;
 import br.com.williamsilva.economizze.model.dao.ReceitaDAO;
 
@@ -69,8 +71,13 @@ public class ReceitaController {
         receitaDAO.delete();
     }
 
-    public void salvar() {
-        ReceitaDAO dao = new ReceitaDAO(this.context, this.receita);
-        dao.insertOrUpdate();
+    public void salvar() throws NomeExistenteException {
+
+        if (this.receita.isValid()) {
+            ReceitaDAO dao = new ReceitaDAO(this.context, this.receita);
+            dao.insertOrUpdate();
+        } else {
+            throw new CampoNuloException("Favor preencher todos os campos");
+        }
     }
 }
