@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
+import br.com.williamsilva.economizze.exception.SaldoInsuficienteException;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
 import io.realm.RealmResults;
@@ -79,7 +80,7 @@ public class DespesaController {
         Double totalDespesasPagas = 0d;
 
         for (Despesa despesa : despesas) {
-            if (despesa.getStatus() == 1) {
+            if (despesa.getStatus() == Despesa.DESPESA_PAGA) {
                 totalDespesasPagas += despesa.getValor();
             }
         }
@@ -93,7 +94,7 @@ public class DespesaController {
         Double totalDespesasPagas = 0d;
 
         for (Despesa despesa : despesas) {
-            if (despesa.getStatus() == 0) {
+            if (despesa.getStatus() != Despesa.DESPESA_PAGA) {
                 totalDespesasPagas += despesa.getValor();
             }
         }
@@ -102,6 +103,12 @@ public class DespesaController {
     }
 
     public void salvar(Despesa despesa) {
+        ReceitaController receitaController = new ReceitaController(this.context);
+
+        if(!receitaController.possuiSaldoDisponivel(despesa)
+                && despesa.getStatus() == Despesa.DESPESA_PAGA){
+            throw new SaldoInsuficienteException("Saldo insuficiente para transação.");
+        }
 
         DespesaDAO dao = new DespesaDAO(this.context, despesa);
         dao.insertOrUpdate();

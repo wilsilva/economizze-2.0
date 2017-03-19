@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
+import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.Receita;
 import br.com.williamsilva.economizze.model.dao.ReceitaDAO;
 
@@ -62,5 +63,15 @@ public class ReceitaController {
         Double totalDespesaPaga = despesaController.totalDespesasPagas(calendar);
         Double totalReceita = this.totalReceitas(calendar);
         return totalReceita - totalDespesaPaga;
+    }
+
+    public boolean possuiSaldoDisponivel(Despesa despesa) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(despesa.getVencimento());
+
+        if(saldoAltual(calendar) - despesa.getValor() < 0) return false;
+
+        return  true;
     }
 }

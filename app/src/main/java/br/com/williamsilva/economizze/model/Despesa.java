@@ -12,6 +12,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Despesa extends RealmObject{
 
+    public static final int DESPESA_PAGA = 1;
     @PrimaryKey
     private Integer id;
     private String nome;
