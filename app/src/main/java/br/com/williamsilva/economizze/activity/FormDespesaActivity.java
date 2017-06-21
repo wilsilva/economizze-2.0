@@ -16,6 +16,7 @@ import br.com.williamsilva.economizze.R;
 import br.com.williamsilva.economizze.controller.DespesaController;
 import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
 import br.com.williamsilva.economizze.exception.NomeExistenteException;
+import br.com.williamsilva.economizze.exception.SaldoInsuficienteException;
 import br.com.williamsilva.economizze.factory.DespesaFactory;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
@@ -100,6 +101,8 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
             controller.salvar(this.despesaFactory.getDespesa());
             this.finish();
         } catch (NomeExistenteException e) {
+            Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).show();
+        }catch(SaldoInsuficienteException e){
             Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();

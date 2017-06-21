@@ -10,6 +10,7 @@ import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
 import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
 import br.com.williamsilva.economizze.exception.CampoNuloException;
 import br.com.williamsilva.economizze.exception.NomeExistenteException;
+import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.Receita;
 import br.com.williamsilva.economizze.model.dao.ReceitaDAO;
 
@@ -79,5 +80,15 @@ public class ReceitaController {
         } else {
             throw new CampoNuloException("Favor preencher todos os campos");
         }
+    }
+
+    public boolean possuiSaldoDisponivel(Despesa despesa) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(despesa.getVencimento());
+
+        if(saldoAltual(calendar) - despesa.getValor() < 0) return false;
+
+        return  true;
     }
 }
