@@ -40,7 +40,7 @@ public class ReceitaFactory {
         Receita receita = new Receita();
         receita.setId(this.activity.getIntent().getIntExtra("id_receita", 0));
         receita.setNome(nome.getText().toString());
-        receita.setValor(Double.parseDouble(valor.getText().toString().replace(",", ".")));
+        receita.setValor((valor.getText().toString().isEmpty()) ? 0d : Double.parseDouble(valor.getText().toString().replace(",", ".")));
         receita.setDataRecebimento(RelogioHelper.parse(recebimento.getText().toString()));
         receita.setReceitaFixa((receitaFixa.isChecked()) ? 1 : 0);
         return receita;

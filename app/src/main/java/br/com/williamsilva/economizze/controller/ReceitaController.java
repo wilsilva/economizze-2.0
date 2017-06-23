@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import br.com.williamsilva.economizze.controller.helper.RelogioHelper;
@@ -24,6 +25,12 @@ public class ReceitaController {
 
     public ReceitaController(Context context) {
         this.context = context;
+    }
+
+    public boolean camposPreenchidos() {
+        if(this.receita.getNome().isEmpty() || this.receita.getDataRecebimento() instanceof Date == false || this.receita.getValor() < 1)  return false;
+
+        return true;
     }
 
     public ReceitaController(Context context, Receita receita) {
@@ -74,7 +81,7 @@ public class ReceitaController {
 
     public void salvar() throws NomeExistenteException {
 
-        if (this.receita.isValid()) {
+        if (this.camposPreenchidos()) {
             ReceitaDAO dao = new ReceitaDAO(this.context, this.receita);
             dao.insertOrUpdate();
         } else {

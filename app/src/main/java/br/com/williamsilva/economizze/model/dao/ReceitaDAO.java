@@ -1,6 +1,7 @@
 package br.com.williamsilva.economizze.model.dao;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 
@@ -55,11 +56,17 @@ public class ReceitaDAO {
     private boolean nomeJaFoiCadastrado(Integer id) {
         Realm realm = Realm.getInstance(this.context);
         RealmResults<Receita> receitas = realm.where(Receita.class).findAll();
+
         RealmQuery<Receita> query = receitas.where().equalTo("nome", this.receita.getNome());
 
-        if (query.count() > 0)
-            if (!query.findFirst().getId().equals(id))
-                return true;
+        if (id > 0) {
+            query = query.notEqualTo("id", this.receita.getId());
+        }
+        Log.e("COUNT", query.count() + "");
+
+        if (query.count() > 0) {
+            return true;
+        }
 
         return false;
     }
@@ -68,7 +75,7 @@ public class ReceitaDAO {
     public void insertOrUpdate() throws NomeExistenteException {
         Realm realm = Realm.getInstance(this.context);
         try {
-            if (this.nomeJaFoiCadastrado(this.receita.getId())) {
+            if (!this.nomeJaFoiCadastrado(this.receita.getId())) {
                 if (this.receita.getId().equals(null) || this.receita.getId().equals(0)) {
                     this.receita.setId(this.autoIncrementForId());
                 }

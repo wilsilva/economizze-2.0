@@ -71,7 +71,6 @@ public class FormReceitaActivity extends AppCompatActivity implements DatePicker
                 break;
             case R.id.add:
                 this.salvarReceita();
-                this.finish();
                 break;
             case R.id.remover:
                 this.removerReceita();
@@ -100,6 +99,7 @@ public class FormReceitaActivity extends AppCompatActivity implements DatePicker
         try {
             ReceitaController receitaController = new ReceitaController(this, receitaFactory.getReceita());
             receitaController.salvar();
+            this.finish();
         } catch (NomeExistenteException erro) {
             Snackbar.make(findViewById(android.R.id.content), erro.getMessage(), Snackbar.LENGTH_LONG).show();
         } catch (CampoNuloException erro) {
