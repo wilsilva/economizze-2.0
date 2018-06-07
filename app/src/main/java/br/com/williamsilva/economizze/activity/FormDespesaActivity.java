@@ -3,10 +3,10 @@ package br.com.williamsilva.economizze.activity;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -14,12 +14,12 @@ import java.util.Calendar;
 
 import br.com.williamsilva.economizze.R;
 import br.com.williamsilva.economizze.controller.DespesaController;
+import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
 import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.exception.SaldoInsuficienteException;
 import br.com.williamsilva.economizze.factory.DespesaFactory;
 import br.com.williamsilva.economizze.model.Despesa;
 import br.com.williamsilva.economizze.model.dao.DespesaDAO;
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -27,9 +27,6 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
 
     private Calendar calendar;
     private DespesaFactory despesaFactory;
-
-    @Bind(R.id.valor)
-    protected EditText valorDespesa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +54,11 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.button_add, menu);
+        getMenuInflater().inflate(R.menu.options, menu);
+
+        if (getIntent().getIntExtra("id_despesa", 0) == 0)
+            menu.removeItem(R.id.remover);
+
         return true;
     }
 
@@ -72,9 +73,26 @@ public class FormDespesaActivity extends AppCompatActivity implements DatePicker
             case R.id.add:
                 salvarDespesa();
                 break;
+            case R.id.remover:
+                removerDespesa();
+                break;
         }
 
         return true;
+    }
+
+    private void removerDespesa() {
+        try {
+            DespesaController despesaController = new DespesaController(this,
+                    new DespesaFactory(this).getDespesa());
+            despesaController.remover();
+        } catch (ErroPersistenciaException erro) {
+            Snackbar.make(findViewById(android.R.id.content), "Desculpe, o sistema gerou um erro ao deletar a despesa!", Snackbar.LENGTH_LONG)
+                    .show();
+            Log.e("Persistência de Dados", erro.getMessage());
+        } finally {
+            this.finish();
+        }
     }
 
     private void salvarDespesa() {

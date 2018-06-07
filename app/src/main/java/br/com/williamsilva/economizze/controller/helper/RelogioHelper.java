@@ -37,17 +37,17 @@ public class RelogioHelper {
     public static Date parse(String date) {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = null;
         try {
-            return dateFormat.parse(date);
+            data = dateFormat.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return data;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public boolean possuiMesmoMesAno(Object o) {
 
         Date date = (Date) o;
 
@@ -66,5 +66,17 @@ public class RelogioHelper {
 
     public Locale getLocale() {
         return this.locale;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RelogioHelper that = (RelogioHelper) o;
+
+        if (!locale.equals(that.locale)) return false;
+        if (!date.equals(that.date)) return false;
+        return dateFormat.equals(that.dateFormat);
     }
 }

@@ -1,11 +1,15 @@
 package br.com.williamsilva.economizze.model.dao;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 
+import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
+import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.model.Receita;
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import io.realm.exceptions.RealmException;
@@ -49,16 +53,39 @@ public class ReceitaDAO {
         return id;
     }
 
-    public void insertOrUpdate() {
+    private boolean nomeJaFoiCadastrado(Integer id) {
+        Realm realm = Realm.getInstance(this.context);
+        RealmResults<Receita> receitas = realm.where(Receita.class).findAll();
+
+        RealmQuery<Receita> query = receitas.where().equalTo("nome", this.receita.getNome());
+
+        if (id > 0) {
+            query = query.notEqualTo("id", this.receita.getId());
+        }
+        Log.e("COUNT", query.count() + "");
+
+        if (query.count() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public void insertOrUpdate() throws NomeExistenteException {
         Realm realm = Realm.getInstance(this.context);
         try {
-            if (this.receita.getId().equals(null) || this.receita.getId().equals(0)) {
-                this.receita.setId(this.autoIncrementForId());
-            }
+            if (!this.nomeJaFoiCadastrado(this.receita.getId())) {
+                if (this.receita.getId().equals(null) || this.receita.getId().equals(0)) {
+                    this.receita.setId(this.autoIncrementForId());
+                }
 
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(this.receita);
-            realm.commitTransaction();
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(this.receita);
+                realm.commitTransaction();
+            } else {
+                throw new NomeExistenteException("Já existe este nome cadastrado!");
+            }
         } catch (RealmException erro) {
             erro.printStackTrace();
         } finally {
@@ -66,14 +93,15 @@ public class ReceitaDAO {
         }
     }
 
-    public void delete() {
+    public void delete() throws ErroPersistenciaException {
         Realm realm = Realm.getInstance(this.context);
         try {
+            receita = this.findReceitaById(receita.getId());
             realm.beginTransaction();
             receita.removeFromRealm();
             realm.commitTransaction();
         } catch (RealmException erro) {
-            erro.printStackTrace();
+            throw new ErroPersistenciaException(erro.getMessage());
         } finally {
             realm.close();
         }
@@ -98,8 +126,8 @@ public class ReceitaDAO {
         Receita receita = null;
 
         try {
-            RealmResults<Receita> despesas = realm.where(Receita.class).findAll();
-            receita = despesas.where().equalTo("id", id).findFirst();
+            RealmResults<Receita> receitas = realm.where(Receita.class).findAll();
+            receita = receitas.where().equalTo("id", id).findFirst();
         } catch (Exception erro) {
             erro.printStackTrace();
         }

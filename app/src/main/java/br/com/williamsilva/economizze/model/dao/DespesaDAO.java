@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import br.com.williamsilva.economizze.exception.ErroPersistenciaException;
 import br.com.williamsilva.economizze.exception.NomeExistenteException;
 import br.com.williamsilva.economizze.model.Despesa;
 import io.realm.Realm;
@@ -61,7 +62,6 @@ public class DespesaDAO {
         Realm realm = Realm.getInstance(this.context);
 
         try {
-
             if (!this.nomeJaFoiCadastrado(this.despesa.getId())) {
                 if (this.despesa.getId() == null || this.despesa.getId().equals(0)) {
                     this.despesa.setId(this.autoIncrementForId());
@@ -76,7 +76,6 @@ public class DespesaDAO {
         } catch (RealmException erro) {
             erro.printStackTrace();
             Log.e("Erro Cadastro Despesa", erro.getMessage());
-
         } finally {
             realm.close();
         }
@@ -97,11 +96,12 @@ public class DespesaDAO {
     public void delete() {
         Realm realm = Realm.getInstance(this.context);
         try {
+            despesa = this.findDespesaById(despesa.getId());
             realm.beginTransaction();
             despesa.removeFromRealm();
             realm.commitTransaction();
         } catch (RealmException erro) {
-            erro.printStackTrace();
+            throw new ErroPersistenciaException(erro.getMessage(), erro.getCause());
         } finally {
             realm.close();
         }

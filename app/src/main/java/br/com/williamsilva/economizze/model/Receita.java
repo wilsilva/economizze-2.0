@@ -6,6 +6,7 @@ import java.util.Date;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by william on 27/01/16.
@@ -14,13 +15,17 @@ public class Receita extends RealmObject {
 
     @PrimaryKey
     private Integer id;
+    @Required
     private String nome;
+    @Required
     private Date dataRecebimento;
+    @Required
     private Double valor;
-    private int receitaFixa;
+    @Required
+    private Integer receitaFixa;
 
 
-    public Receita(Integer id, String nome, Date dataRecebimento, Double valor, int receitaFixa) {
+    public Receita(Integer id, String nome, Date dataRecebimento, Double valor, Integer receitaFixa) {
         this.id = id;
         this.nome = nome;
         this.dataRecebimento = dataRecebimento;
@@ -64,11 +69,11 @@ public class Receita extends RealmObject {
         this.valor = valor;
     }
 
-    public int getReceitaFixa() {
+    public Integer getReceitaFixa() {
         return receitaFixa;
     }
 
-    public void setReceitaFixa(int receitaFixa) {
+    public void setReceitaFixa(Integer receitaFixa) {
         this.receitaFixa = receitaFixa;
     }
 
